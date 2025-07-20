@@ -1,6 +1,8 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <AgendaView />
+  <section style="display: flex; justify-content: center">
+    <img alt="Vue logo" src="./assets/logo.png" style="text-align: center">
+  </section>
+  <AgendaView/>
 </template>
 
 <script>

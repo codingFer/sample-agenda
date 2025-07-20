@@ -99,6 +99,14 @@ export default {
         return
       }
       this.$emit('created', {...this.contact});
+      this.contact = reactive({
+        name: '',
+        email: '',
+        address: '',
+        phone: '',
+        country: '',
+        city: '',
+      });
     }
   },
   computed: {

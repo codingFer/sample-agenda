@@ -1,33 +1,49 @@
 <template>
   <div class="container">
-    <h1>{{ title }}</h1>
-    <p>
-      <button type="button" class="btn btn-primary" @click="goToNewContact()">
+    <h1 class="text-center">{{ title }}</h1>
+    <p style="text-align: right">
+      <button type="button" class="btn btn-primary" @click="goToNewContact()" title="new contact">
         <i class="bi bi-person-plus"></i>
       </button>
     </p>
-    <div class="mb-3">
+
+    <h4>
+      <i class="bi bi-filter"></i>
+      Filter By:
+    </h4>
+    <div class="mb-3 flex-container">
       <div class="input-group">
-        <span class="input-group-text" id="basic-addon3">
-          Filter by country
-          <i class="bi bi-filter"></i>
+        <span class="input-group-text" id="basic-addon3" title="filter by country">
+          <i class="bi bi-globe-americas"></i>
         </span>
         <select v-model="filterCountryBy" id="color" class="form-select">
-          <option disabled value="">-- Selecciona --</option>
+          <option disabled value="">-- Select --</option>
           <option value="">All</option>
-          <option v-for="marca in countries" :key="marca" :value="marca">
-            {{ marca }}
+          <option v-for="country in countries" :key="country" :value="country">
+            {{ country }}
           </option>
         </select>
       </div>
+
     </div>
-    <div class="mb-3">
+
+    <h4>
+      <i class="bi bi-search"></i>
+      Search By:
+    </h4>
+    <div class="mb-3 flex-container">
       <div class="input-group">
-        <span class="input-group-text" id="basic-addon3">
-          Search by name
-          <i class="bi bi-search"></i>
+        <span class="input-group-text" id="basic-addon3" title="search by name">
+          <i class="bi bi-person"></i>
         </span>
-        <input type="search" v-model="modeloAbuscar" class="form-control">
+        <input type="search" v-model="nameToSearch" class="form-control">
+      </div>
+
+      <div class="input-group">
+        <span class="input-group-text" id="basic-addon3" title="search by email">
+          <i class="bi bi-envelope"></i>
+        </span>
+        <input type="search" v-model="mailToSearch" class="form-control">
       </div>
     </div>
     <div class="table-responsive">
@@ -71,7 +87,7 @@
           <td>{{ item.phone }}</td>
           <td>{{ item.country }}</td>
           <td>{{ item.city }}</td>
-          <td>
+          <td class="flex-container">
             <button type="button" class="btn btn-primary" @click="openModal(index)" title="edit">
               <i class="bi bi-pencil"></i>
             </button>
@@ -177,7 +193,8 @@ export default {
         'Australia',
       ],
       filterCountryBy: "",
-      modeloAbuscar: "",
+      nameToSearch: "",
+      mailToSearch: "",
       modalMode: "createContact"
     }
   },
@@ -255,11 +272,20 @@ export default {
             .filter((item) => item.country === this.filterCountryBy);
       }
 
-      if (this.anioAbuscar !== "") {
+      if (this.nameToSearch || this.mailToSearch) {
         result = result.filter((item) => {
-          const _marca = item.modelo || "";
-          const _textToSearch = this.modeloAbuscar || "";
-          return _marca.toLowerCase().includes(_textToSearch.toLocaleLowerCase());
+          const _textNameToSearch = this.nameToSearch || "";
+          const _textMailToSearch = this.mailToSearch || "";
+          if (_textNameToSearch && _textMailToSearch) {
+            return item.name.toLowerCase().includes(_textNameToSearch.toLocaleLowerCase()) &&
+                item.email.toLowerCase().includes(_textMailToSearch.toLocaleLowerCase());
+          }
+          if (_textNameToSearch) {
+            return item.name.toLowerCase().includes(_textNameToSearch.toLocaleLowerCase());
+          }
+          if (_textMailToSearch) {
+            return item.email.toLowerCase().includes(_textMailToSearch.toLocaleLowerCase());
+          }
         });
       }
 
@@ -273,4 +299,13 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.text-center {
+  text-align: center;
+}
+</style>
